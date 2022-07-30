@@ -33,3 +33,4 @@ build/
 .vscode/
 
 repo/
+scripts/repo

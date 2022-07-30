@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.CompletableFuture;
+
 @RestController
 @RequestMapping("/dependency-check")
 public class DependencyScanController {
@@ -19,7 +21,14 @@ public class DependencyScanController {
   public String scan(@RequestParam("repo") String repo) {
     System.out.println("repo = " + repo);
     try {
-      scanService.scanRepo(repo);
+      CompletableFuture.runAsync(()->{
+        try {
+          scanService.scanRepo(repo);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      });
+      return scanService.getPrevReport(repo);
     } catch (Exception e) {
       e.printStackTrace();
     }
