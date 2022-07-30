@@ -15,13 +15,4 @@ public class DependencyCheckApplication {
     SpringApplication.run(DependencyCheckApplication.class, args);
   }
 
-  public void init() throws Exception {
-    String line;
-    Process p = Runtime.getRuntime().exec("test.bat");
-    BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-    while ((line = input.readLine()) != null) {
-      System.out.println(line);
-    }
-    input.close();
-  }
 }
