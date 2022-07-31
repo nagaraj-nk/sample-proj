@@ -8,30 +8,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.concurrent.CompletableFuture;
-
 @RestController
 @RequestMapping("/dependency-check")
 public class DependencyScanController {
 
-  @Autowired
-  private DependencyScanService scanService;
+  @Autowired private DependencyScanService scanService;
 
   @GetMapping(value = "/scan", produces = MediaType.APPLICATION_JSON_VALUE)
   public String scan(@RequestParam("repo") String repo) {
     System.out.println("repo = " + repo);
     try {
-      CompletableFuture.runAsync(()->{
-        try {
-          scanService.scanRepo(repo);
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      });
-      return scanService.getPrevReport(repo);
-    } catch (Exception e) {
-      e.printStackTrace();
+      return scanService.scanRepo(repo);
+    } catch (Exception ex) {
+      ex.printStackTrace();
     }
-    return repo;
+    return "something went wrong while processing repo: " + repo;
   }
 }

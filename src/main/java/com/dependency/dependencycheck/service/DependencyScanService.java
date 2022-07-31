@@ -21,20 +21,24 @@ public class DependencyScanService {
     System.out.println("projectName = " + projectName);
     Process process = Runtime.getRuntime().exec(SCRIPT_PATH + " " + repo + " " + projectName);
     BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
+    String reportFilePath = null;
     while ((line = input.readLine()) != null) {
       System.out.println(line);
       if (line.contains("Writing report to")) {
         String[] split = line.split("report to:");
-        String reportFilePath = split[1].trim();
+        reportFilePath = split[1].trim();
         reportFilePath = reportFilePath.replace("\\.\\", "\\");
         System.out.println("reportFilePath = " + reportFilePath);
-        String fileContent = FileUtils.readFileToString(new File(reportFilePath), Charset.defaultCharset());
-        System.out.println("fileContent = " + fileContent);
-        input.close();
-        return fileContent;
       }
     }
     input.close();
+
+    if (reportFilePath!=null) {
+      String fileContent = FileUtils.readFileToString(new File(reportFilePath), Charset.defaultCharset());
+      System.out.println("fileContent = " + fileContent);
+      return fileContent;
+    }
+
     return "Report generation incomplete";
   }
 
