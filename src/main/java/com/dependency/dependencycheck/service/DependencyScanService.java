@@ -14,7 +14,6 @@ import java.nio.charset.Charset;
 public class DependencyScanService {
   private static final String SCRIPT_PATH = "scripts/scan.bat";
 
-  @Async
   public String scanRepo(String repo) throws Exception {
     String line;
     String projectName = getProjectName(repo).replace(".git", "");
@@ -36,10 +35,15 @@ public class DependencyScanService {
     if (reportFilePath!=null) {
       String fileContent = FileUtils.readFileToString(new File(reportFilePath), Charset.defaultCharset());
       System.out.println("fileContent = " + fileContent);
+      cleanUp();
       return fileContent;
     }
 
     return "Report generation incomplete";
+  }
+
+  private void cleanUp() {
+    // TODO: Cleanup logic to add
   }
 
   public String getPrevReport(String repo) {
